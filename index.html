@@ -529,11 +529,17 @@ document.getElementById('ctc').addEventListener('click', function () {
       + 'snippet from your Cognigy Voice Gateway Endpoint configuration.');
 });
 </script>
-  <script src="https://github.com/Cognigy/Webchat/releases/latest/download/webchat.js"></script>
+
+<!-- ================= Cognigy Webchat =================
+     webchat.js is self-hosted in this repo, alongside index.html.
+     Download it from github.com/Cognigy/Webchat/releases (Assets)
+     and upload it next to this file.
+     ==================================================== -->
+<script src="webchat.js"></script>
 <script>
-	initWebchat(
-		"https://endpoint-trial.cognigy.ai/60728bf34d391e019932b569dd6078a8d0bd1cce100154c801df3e3a98b8e4f0"
-	);
+  initWebchat(
+    "https://endpoint-trial.cognigy.ai/60728bf34d391e019932b569dd6078a8d0bd1cce100154c801df3e3a98b8e4f0"
+  );
 </script>
 </body>
 </html>
