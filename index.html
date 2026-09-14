@@ -159,19 +159,6 @@ a{color:inherit}
   0%{opacity:.85;transform:scale(1)}
   55%,100%{opacity:0;transform:scale(1.055)}
 }
-.callcue{
-  display:flex;align-items:center;gap:10px;
-  background:var(--signal);color:var(--ink);
-  font-family:'Barlow Condensed',sans-serif;font-weight:700;
-  font-size:20px;letter-spacing:.01em;line-height:1.15;
-  padding:14px 18px;border-radius:3px;margin:0;
-}
-.callcue::before{
-  content:'';width:22px;height:22px;flex:none;
-  background:currentColor;
-  -webkit-mask:var(--phone) center/contain no-repeat;
-  mask:var(--phone) center/contain no-repeat;
-}
 .callnote{
   font-size:14.5px;color:#1A2830;margin:14px 0 0;line-height:1.55;
 }
@@ -346,7 +333,14 @@ footer .sp{margin-left:auto}
         <p class="lede" data-i18n="call.lede"></p>
 
 
-        <p class="callcue" data-i18n="call.cue"></p>
+        <button class="callbtn" id="ctc" type="button" onclick="startCall()">
+          <span class="ring" aria-hidden="true"></span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>
+          </svg>
+          <span data-i18n="call.btn"></span>
+        </button>
         <p class="callnote" data-i18n="call.note"></p>
         <p class="langline" data-i18n-html="call.switch"></p>
       </div>
@@ -476,7 +470,13 @@ footer .sp{margin-left:auto}
       <div class="callpanel">
         <h2 data-i18n="bk.callh"></h2>
         <p class="lede" data-i18n="bk.calllede"></p>
-        <p class="callcue" data-i18n="call.cue"></p>
+        <button class="callbtn" type="button" onclick="startCall()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>
+          </svg>
+          <span data-i18n="call.btn"></span>
+        </button>
         <p class="callnote" data-i18n="bk.callnote"></p>
       </div>
     </div>
@@ -542,7 +542,7 @@ var I18N = {
 
     "call.h":"Talk to us now",
     "call.lede":"Our appointment line answers straight away. No menus, no queue.",
-    "call.cue":"Click the call button in the corner of this page",
+    "call.btn":"Start voice call",
     "call.note":"You will need to confirm your licence plate and the postal code on your account before we can discuss an existing appointment.",
     "call.switch":"<b>\u00bfEspa\u00f1ol?</b> Diga \u201cespa\u00f1ol\u201d al principio de la llamada y continuamos en su idioma.",
 
@@ -619,7 +619,7 @@ var I18N = {
 
     "call.h":"Hable con nosotros",
     "call.lede":"Nuestra l\u00ednea de citas responde al instante. Sin men\u00fas ni esperas.",
-    "call.cue":"Pulse el bot\u00f3n de llamada en la esquina de esta p\u00e1gina",
+    "call.btn":"Iniciar llamada",
     "call.note":"Necesitar\u00e1 confirmar la matr\u00edcula de su veh\u00edculo y el c\u00f3digo postal de su cuenta antes de poder consultar una cita existente.",
     "call.switch":"<b>English?</b> Say \u201cEnglish\u201d at the start of the call and we will continue in your language.",
 
@@ -713,6 +713,55 @@ function setLang(lang){
   try { localStorage.setItem('qwikLang', lang); } catch (e) {}
 }
 
+
+/* ---------- bridge our styled button to the Click To Call widget ----------
+   The widget injects its own launcher somewhere on the page. We hide it and
+   forward clicks from the panel buttons, so the call control stays in context.
+   If the widget script fails to load, the buttons explain what is wrong. */
+var CTC = { el: null, hunted: false };
+
+function findWidgetLauncher(){
+  var sel = [
+    '[id*="webrtc" i] button', '[class*="webrtc" i] button',
+    '[id*="click-to-call" i] button', '[class*="click-to-call" i] button',
+    '[id*="cognigy" i][id*="call" i]', '[class*="cognigy" i][class*="call" i]'
+  ];
+  for (var i = 0; i < sel.length; i++){
+    var el = document.querySelector(sel[i]);
+    if (el) return el;
+  }
+  return null;
+}
+
+function hideWidgetLauncher(){
+  var el = CTC.el;
+  if (!el) return;
+  var root = el.closest('[id],[class]') || el;
+  root.style.position = 'absolute';
+  root.style.left = '-9999px';
+  root.style.width = '1px';
+  root.style.height = '1px';
+  root.style.overflow = 'hidden';
+}
+
+function startCall(){
+  if (!CTC.el) CTC.el = findWidgetLauncher();
+  if (CTC.el){ CTC.el.click(); return; }
+
+  var es = document.documentElement.lang === 'es';
+  alert(es
+    ? 'El widget de llamada no se ha cargado. Compruebe la consola del navegador.'
+    : 'The call widget has not loaded. Check the browser console for a failed request to webRTCWidget.js.');
+}
+
+addEventListener('load', function(){
+  setTimeout(function(){
+    CTC.el = findWidgetLauncher();
+    if (CTC.el){ hideWidgetLauncher(); }
+    else { console.warn('[Qwik] Click To Call launcher not found. Is webRTCWidget.js loading?'); }
+  }, 1200);
+});
+
 (function initLang(){
   var saved = null;
   try { saved = localStorage.getItem('qwikLang'); } catch (e) {}
@@ -730,10 +779,10 @@ document.getElementById('ctc').addEventListener('click', function () {
 </script>
 
 <!-- ============== Cognigy Click To Call (WebRTC) ==============
-     Renders its own call button. Self-host webRTCWidget.js in this
-     repo if the GitHub releases URL fails to load (it redirects).
+     webRTCWidget.js is self-hosted in this repo, alongside index.html.
+     Download it from github.com/Cognigy/click-to-call-widget/releases
      ============================================================= -->
-<script src="https://github.com/Cognigy/click-to-call-widget/releases/latest/download/webRTCWidget.js"></script>
+<script src="webRTCWidget.js"></script>
 <script>
   addEventListener("load", function () {
     if (window.initWebRTCWidget) {
