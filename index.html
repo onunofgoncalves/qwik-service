@@ -754,17 +754,17 @@ function findLauncher(){
 
 function hideLauncher(el){
   var root = el;
-  // walk up to the widget's own container, but not as far as body
   while (root.parentElement && root.parentElement !== document.body) {
     root = root.parentElement;
   }
-  root.style.position = 'fixed';
-  root.style.left = '-10000px';
-  root.style.top = '0';
-  root.style.width = '1px';
-  root.style.height = '1px';
-  root.style.overflow = 'hidden';
-  root.setAttribute('aria-hidden', 'true');
+  /* Keep the widget rendered and on-screen — browsers suppress the microphone
+     permission prompt for elements moved off-screen or given zero size. We make
+     it visually invisible but geometrically intact, and let clicks pass through
+     to the page. The launcher itself is re-enabled for our forwarded click. */
+  root.style.opacity = '0';
+  root.style.pointerEvents = 'none';
+  root.style.zIndex = '1';
+  root.setAttribute('data-qwik-hidden', 'true');
 }
 
 function watchForLauncher(){
@@ -789,7 +789,19 @@ addEventListener('load', function(){
 
 function startCall(){
   var el = CTC.launcher || findLauncher();
-  if (el){ CTC.launcher = el; el.click(); return; }
+  if (el){
+    CTC.launcher = el;
+    var root = el.closest('[data-qwik-hidden]');
+    if (root){
+      /* reveal the widget so the browser treats the click as a genuine user
+         gesture on a visible element, which is what unlocks the mic prompt */
+      root.style.opacity = '1';
+      root.style.pointerEvents = 'auto';
+      root.style.zIndex = '9999';
+    }
+    el.click();
+    return;
+  }
 
   var es = document.documentElement.lang === 'es';
   alert(es
