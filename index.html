@@ -159,9 +159,11 @@ a{color:inherit}
   0%{opacity:.85;transform:scale(1)}
   55%,100%{opacity:0;transform:scale(1.055)}
 }
+.callnote a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
 .callnote{
   font-size:14.5px;color:#1A2830;margin:14px 0 0;line-height:1.55;
 }
+.callnote a{font-weight:600;border-bottom:2px solid var(--signal);text-decoration:none}
 .langline{
   margin-top:16px;padding-top:15px;border-top:1px solid var(--line);
   font-size:14.5px;color:#1A2830;
@@ -477,7 +479,7 @@ footer .sp{margin-left:auto}
           </svg>
           <span data-i18n="call.btn"></span>
         </button>
-        <p class="callnote" data-i18n="bk.callnote"></p>
+        <p class="callnote" data-i18n-html="bk.callnote"></p>
       </div>
     </div>
   </section>
@@ -524,6 +526,7 @@ footer .sp{margin-left:auto}
     <span class="sp"><a href="tel:+493012345678">+49 30 1234 5678</a></span>
     <span><a href="#centres" data-i18n="ft.find"></a></span>
     <span><a href="#book" data-i18n="ft.book"></a></span>
+    <span><a href="chat.html" data-i18n="ft.chat"></a></span>
   </div>
 </footer>
 
@@ -586,7 +589,7 @@ var I18N = {
     "bk.4":"Get your confirmation number before you hang up",
     "bk.callh":"Start a call",
     "bk.calllede":"Answers immediately, any time of day.",
-    "bk.callnote":"Prefer to type? The same assistant is available in chat from the icon in the corner of this page.",
+    "bk.callnote":"Prefer to type? The same assistant is available in our <a href=\"chat.html\">web chat</a>.",
 
     "faq.h":"Before you call",
     "faq.q1":"What do I need to have ready?",
@@ -603,7 +606,7 @@ var I18N = {
     "faq.a6":"Book a general inspection or diagnostic visit and discuss the symptoms with the technician.",
 
     "ft.tag":"Qwik Service \u2014 vehicle servicing, repairs and safety inspections",
-    "ft.find":"Find a centre", "ft.book":"Book an appointment",
+    "ft.find":"Find a centre", "ft.book":"Book an appointment", "ft.chat":"Web chat", "ft.chat":"Web chat",
     "title":"Qwik Service \u2014 Vehicle servicing, repairs and safety inspections"
   },
 
@@ -663,7 +666,7 @@ var I18N = {
     "bk.4":"Reciba su n\u00famero de confirmaci\u00f3n antes de colgar",
     "bk.callh":"Iniciar una llamada",
     "bk.calllede":"Respuesta inmediata, a cualquier hora.",
-    "bk.callnote":"\u00bfPrefiere escribir? El mismo asistente est\u00e1 disponible en el chat, en el icono de la esquina de esta p\u00e1gina.",
+    "bk.callnote":"\u00bfPrefiere escribir? El mismo asistente est\u00e1 disponible en nuestro <a href=\"chat.html\">chat web</a>.",
 
     "faq.h":"Antes de llamar",
     "faq.q1":"\u00bfQu\u00e9 necesito tener a mano?",
@@ -680,7 +683,7 @@ var I18N = {
     "faq.a6":"Reserve una revisi\u00f3n general o una visita de diagn\u00f3stico y comente los s\u00edntomas con el t\u00e9cnico.",
 
     "ft.tag":"Qwik Service \u2014 mantenimiento, reparaciones e inspecci\u00f3n t\u00e9cnica",
-    "ft.find":"Encontrar un centro", "ft.book":"Reservar una cita",
+    "ft.find":"Encontrar un centro", "ft.book":"Reservar una cita", "ft.chat":"Chat web", "ft.chat":"Chat web",
     "title":"Qwik Service \u2014 Mantenimiento, reparaciones e inspecci\u00f3n t\u00e9cnica"
   }
 };
@@ -792,18 +795,5 @@ function startCall(){
   });
 </script>
 
-<!-- ================= Cognigy Webchat =================
-     webchat.js is self-hosted in this repo, alongside index.html.
-     ==================================================== -->
-<!-- TEMPORARILY DISABLED to test whether webchat's Preact bundle
-     clashes with the Click To Call widget. Re-enable by removing
-     these comment markers once the call widget is confirmed working.
-<script src="webchat.js"></script>
-<script>
-  initWebchat(
-    "https://endpoint-trial.cognigy.ai/60728bf34d391e019932b569dd6078a8d0bd1cce100154c801df3e3a98b8e4f0"
-  );
-</script>
--->
 </body>
 </html>
