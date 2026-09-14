@@ -320,26 +320,16 @@ footer .sp{margin-left:auto}
           <div class="fact"><b data-i18n="hero.f3b"></b><span data-i18n="hero.f3s"></span></div>
         </div>
       </div>
-
-      <!-- ================================================================
-           CLICK-TO-CALL — replace the button below with the Cognigy
-           Click To Call widget snippet from the Voice Gateway Endpoint.
-           Keep the surrounding .callpanel markup so the widget stays in
-           context rather than floating on the page.
-           ================================================================ -->
       <div class="callpanel" id="call">
-        <h2 data-i18n="call.h"></h2>
-        <p class="lede" data-i18n="call.lede"></p>
-
-        <script src="https://github.com/Cognigy/click-to-call-widget/releases/latest/download/webRTCWidget.js"></script>
+		  <script src="https://github.com/Cognigy/click-to-call-widget/releases/latest/download/webRTCWidget.js"></script>
 <script>
 	addEventListener("load", (event) => {if (window.initWebRTCWidget) {window.initWebRTCWidget("https://endpoint-trial.cognigy.ai/27bcbfde7cd10d24028183581b3527adf2e92ff5551787d1ae2264d139bce355")}});
 </script>
-
+        <h2 data-i18n="call.h"></h2>
+        <p class="lede" data-i18n="call.lede"></p>
         <p class="callnote" data-i18n="call.note"></p>
         <p class="langline" data-i18n-html="call.switch"></p>
       </div>
-      <!-- ================ end click-to-call ================ -->
     </div>
   </section>
 
