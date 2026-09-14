@@ -15,7 +15,7 @@
   --concrete-dim:#F4F2EE;
   --signal:#F2B705;
   --ink:#101A1F;
-  --muted:#22313A;
+  --muted:#101A1F;
   --line:#CFCBC3;
   --line-dark:#2E3F49;
   --measure:64ch;
@@ -160,7 +160,7 @@ a{color:inherit}
   box-shadow:0 18px 46px rgba(0,0,0,.34);
 }
 .callpanel h2{font-size:29px;margin-bottom:6px}
-.callpanel .lede{font-size:16px;color:#22313A;margin:0 0 20px}
+.callpanel .lede{font-size:16px;color:#101A1F;margin:0 0 20px}
 .callbtn{
   display:flex;align-items:center;justify-content:center;gap:11px;
   width:100%;border:0;cursor:pointer;
@@ -182,7 +182,7 @@ a{color:inherit}
   0%{opacity:.85;transform:scale(1)}
   55%,100%{opacity:0;transform:scale(1.055)}
 }
-.ctc-slot{position:relative;min-height:56px}
+.ctc-slot{position:relative;min-height:52px}
 .ctc-slot > [data-qwik-ctc]{
   position:absolute !important;
   inset:0 !important;
@@ -197,35 +197,33 @@ a{color:inherit}
   border-radius:3px !important;
 }
 .callcue{
-  display:flex;align-items:center;gap:11px;
-  background:var(--signal);color:var(--ink);
-  font-family:'Barlow Condensed',sans-serif;font-weight:700;
-  font-size:19px;line-height:1.2;padding:14px 18px;border-radius:3px;margin:0;
+  display:flex;align-items:center;gap:9px;
+  color:#101A1F;font-size:15px;line-height:1.45;margin:0;
+  padding:12px 0 2px;
 }
 .callcue::before{
-  content:'';width:21px;height:21px;flex:none;background:currentColor;
+  content:'';width:16px;height:16px;flex:none;background:var(--ink);
   -webkit-mask:var(--phone) center/contain no-repeat;
   mask:var(--phone) center/contain no-repeat;
 }
 .callnote a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
 .callnote{
-  font-size:14.5px;color:#1A2830;margin:14px 0 0;line-height:1.55;
+  font-size:14.5px;color:#101A1F;margin:14px 0 0;line-height:1.55;
 }
 .callcue{
-  display:flex;align-items:center;gap:11px;
-  background:var(--signal);color:var(--ink);
-  font-family:'Barlow Condensed',sans-serif;font-weight:700;
-  font-size:19px;line-height:1.2;padding:14px 18px;border-radius:3px;margin:0;
+  display:flex;align-items:center;gap:9px;
+  color:#101A1F;font-size:15px;line-height:1.45;margin:0;
+  padding:12px 0 2px;
 }
 .callcue::before{
-  content:'';width:21px;height:21px;flex:none;background:currentColor;
+  content:'';width:16px;height:16px;flex:none;background:var(--ink);
   -webkit-mask:var(--phone) center/contain no-repeat;
   mask:var(--phone) center/contain no-repeat;
 }
 .callnote a{font-weight:600;border-bottom:2px solid var(--signal);text-decoration:none}
 .langline{
   margin-top:16px;padding-top:15px;border-top:1px solid var(--line);
-  font-size:14.5px;color:#1A2830;
+  font-size:14.5px;color:#101A1F;
 }
 .langline b{color:var(--ink);font-weight:600}
 
@@ -238,7 +236,7 @@ a{color:inherit}
 section{padding:78px 0}
 .sechead{margin-bottom:38px;max-width:var(--measure)}
 .sechead h2{font-size:clamp(30px,3.6vw,42px);text-transform:uppercase}
-.sechead p{color:#22313A;margin:12px 0 0;font-size:17px}
+.sechead p{color:#101A1F;margin:12px 0 0;font-size:17px}
 
 /* ---------- services ---------- */
 .services{border-top:1px solid var(--line)}
@@ -251,9 +249,9 @@ section{padding:78px 0}
 }
 .svc article:last-child{border-right:0}
 .svc h3{font-size:26px;text-transform:uppercase;margin-bottom:9px}
-.svc p{font-size:16px;color:#22313A;margin:0 0 16px}
+.svc p{font-size:16px;color:#101A1F;margin:0 0 16px}
 .svc ul{margin:0;padding:0;list-style:none;font-size:15px}
-.svc li{padding:7px 0;border-top:1px solid var(--line);color:#1A2830}
+.svc li{padding:7px 0;border-top:1px solid var(--line);color:#101A1F}
 .dur{
   display:inline-block;margin-top:18px;
   font-family:'Barlow Condensed',sans-serif;font-weight:600;
@@ -270,7 +268,7 @@ section{padding:78px 0}
 .inspect .wrap{display:grid;grid-template-columns:200px 1fr;gap:52px;align-items:center}
 .plaque{width:190px;height:190px}
 .inspect h2{font-size:clamp(28px,3.4vw,40px);text-transform:uppercase;margin-bottom:14px}
-.inspect p{max-width:60ch;color:#1A2830;margin:0 0 14px}
+.inspect p{max-width:60ch;color:#101A1F;margin:0 0 14px}
 .certnote{
   display:inline-block;margin-top:6px;background:var(--steel);color:#fff;
   font-size:14px;padding:9px 15px;border-radius:3px;
@@ -288,10 +286,10 @@ section{padding:78px 0}
 .centre:last-child{border-right:0}
 .centre .id{
   font-family:'Barlow Condensed',sans-serif;font-size:15px;
-  color:#22313A;font-weight:600;
+  color:#101A1F;font-weight:600;
 }
 .centre h3{font-size:28px;margin:4px 0 12px}
-.centre address{font-style:normal;color:#1A2830;font-size:16px;margin-bottom:14px}
+.centre address{font-style:normal;color:#101A1F;font-size:16px;margin-bottom:14px}
 .centre .tel2{
   font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:21px;
   text-decoration:none;border-bottom:2px solid var(--signal);
@@ -299,7 +297,7 @@ section{padding:78px 0}
 .tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:18px}
 .tag{
   font-size:13px;border:1px solid var(--line);padding:5px 11px;
-  border-radius:2px;color:#1A2830;background:#fff;
+  border-radius:2px;color:#101A1F;background:#fff;
 }
 .tag.cert{border-color:var(--ink);background:var(--signal);color:var(--ink);font-weight:600}
 @media(max-width:760px){
@@ -339,7 +337,7 @@ section{padding:78px 0}
 .qa summary::-webkit-details-marker{display:none}
 .qa summary::after{content:'+';color:var(--signal);font-size:26px;line-height:1}
 .qa details[open] summary::after{content:'\2013'}
-.qa p{margin:0 0 20px;color:#1A2830;max-width:var(--measure)}
+.qa p{margin:0 0 20px;color:#101A1F;max-width:var(--measure)}
 
 /* ---------- footer ---------- */
 footer{background:var(--steel-deep);color:#AFC0C8;padding:44px 0 52px;font-size:14.5px}
