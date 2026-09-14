@@ -182,6 +182,20 @@ a{color:inherit}
   0%{opacity:.85;transform:scale(1)}
   55%,100%{opacity:0;transform:scale(1.055)}
 }
+.ctc-slot{position:relative;min-height:56px}
+.ctc-slot > [data-qwik-ctc]{
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  margin:0 !important;
+  z-index:2;
+}
+.ctc-slot > [data-qwik-ctc] button{
+  width:100% !important;
+  height:100% !important;
+  border-radius:3px !important;
+}
 .callcue{
   display:flex;align-items:center;gap:11px;
   background:var(--signal);color:var(--ink);
@@ -381,7 +395,7 @@ footer .sp{margin-left:auto}
         <p class="lede" data-i18n="call.lede"></p>
 
 
-        <p class="callcue" data-i18n="call.cue"></p>
+        <div id="ctc-slot" class="ctc-slot"><p class="callcue" data-i18n="call.cue"></p></div>
         <p class="callnote" data-i18n="call.note"></p>
         <p class="langline" data-i18n-html="call.switch"></p>
       </div>
@@ -749,6 +763,47 @@ function setLang(lang){
   try { localStorage.setItem('qwikLang', lang); } catch (e) {}
 }
 
+
+
+/* ---------- host the Click To Call widget inside the call panel ----------
+   The widget appends its own container to document.body. Rather than proxying
+   clicks to it — which browsers treat as a synthetic gesture and refuse to grant
+   microphone access for — we physically move that container into the panel and
+   stretch it to fill the slot. The button the caller presses is the widget's
+   real button, so the gesture is genuine and the mic prompt appears. */
+(function () {
+  var slot, moved = false;
+
+  function widgetRoot(){
+    var btn = document.querySelector('[aria-label="Start a call"]');
+    if (!btn) return null;
+    var root = btn;
+    while (root.parentElement && root.parentElement !== document.body) root = root.parentElement;
+    return root.parentElement === document.body ? root : null;
+  }
+
+  function place(){
+    if (moved) return true;
+    slot = slot || document.getElementById('ctc-slot');
+    var root = widgetRoot();
+    if (!slot || !root) return false;
+    root.setAttribute('data-qwik-ctc', '');
+    slot.innerHTML = '';
+    slot.appendChild(root);
+    moved = true;
+    return true;
+  }
+
+  addEventListener('load', function () {
+    if (place()) return;
+    var obs = new MutationObserver(function () { if (place()) obs.disconnect(); });
+    obs.observe(document.body, { childList: true, subtree: true });
+    setTimeout(function () {
+      obs.disconnect();
+      if (!moved) console.warn('[Qwik] Call widget not found; it will stay in its default position.');
+    }, 15000);
+  });
+})();
 
 (function initLang(){
   var saved = null;
