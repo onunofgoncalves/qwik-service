@@ -714,53 +714,61 @@ function setLang(lang){
 }
 
 
-/* ---------- bridge our styled button to the Click To Call widget ----------
-   The widget injects its own launcher somewhere on the page. We hide it and
-   forward clicks from the panel buttons, so the call control stays in context.
-   If the widget script fails to load, the buttons explain what is wrong. */
-var CTC = { el: null, hunted: false };
+/* ---------- bridge our styled buttons to the Click To Call widget ----------
+   The widget appends its own launcher to document.body. We locate it by its
+   aria-label, hide it, and forward clicks from the panel buttons so the call
+   control stays in context on the page. It renders asynchronously, so we watch
+   for it rather than assuming a fixed delay. */
+var CTC = { launcher: null };
 
-function findWidgetLauncher(){
-  var sel = [
-    '[id*="webrtc" i] button', '[class*="webrtc" i] button',
-    '[id*="click-to-call" i] button', '[class*="click-to-call" i] button',
-    '[id*="cognigy" i][id*="call" i]', '[class*="cognigy" i][class*="call" i]'
-  ];
-  for (var i = 0; i < sel.length; i++){
-    var el = document.querySelector(sel[i]);
-    if (el) return el;
-  }
-  return null;
+function findLauncher(){
+  return document.querySelector('[aria-label="Start a call"]');
 }
 
-function hideWidgetLauncher(){
-  var el = CTC.el;
-  if (!el) return;
-  var root = el.closest('[id],[class]') || el;
-  root.style.position = 'absolute';
-  root.style.left = '-9999px';
+function hideLauncher(el){
+  var root = el;
+  // walk up to the widget's own container, but not as far as body
+  while (root.parentElement && root.parentElement !== document.body) {
+    root = root.parentElement;
+  }
+  root.style.position = 'fixed';
+  root.style.left = '-10000px';
+  root.style.top = '0';
   root.style.width = '1px';
   root.style.height = '1px';
   root.style.overflow = 'hidden';
+  root.setAttribute('aria-hidden', 'true');
 }
 
-function startCall(){
-  if (!CTC.el) CTC.el = findWidgetLauncher();
-  if (CTC.el){ CTC.el.click(); return; }
-
-  var es = document.documentElement.lang === 'es';
-  alert(es
-    ? 'El widget de llamada no se ha cargado. Compruebe la consola del navegador.'
-    : 'The call widget has not loaded. Check the browser console for a failed request to webRTCWidget.js.');
+function watchForLauncher(){
+  var found = findLauncher();
+  if (found){ CTC.launcher = found; hideLauncher(found); return true; }
+  return false;
 }
 
 addEventListener('load', function(){
+  if (watchForLauncher()) return;
+  var obs = new MutationObserver(function(){
+    if (watchForLauncher()) obs.disconnect();
+  });
+  obs.observe(document.body, { childList: true, subtree: true });
   setTimeout(function(){
-    CTC.el = findWidgetLauncher();
-    if (CTC.el){ hideWidgetLauncher(); }
-    else { console.warn('[Qwik] Click To Call launcher not found. Is webRTCWidget.js loading?'); }
-  }, 1200);
+    obs.disconnect();
+    if (!CTC.launcher) {
+      console.warn('[Qwik] Click To Call launcher not found after 15s.');
+    }
+  }, 15000);
 });
+
+function startCall(){
+  var el = CTC.launcher || findLauncher();
+  if (el){ CTC.launcher = el; el.click(); return; }
+
+  var es = document.documentElement.lang === 'es';
+  alert(es
+    ? 'El servicio de llamada a\u00fan se est\u00e1 cargando. Int\u00e9ntelo de nuevo en unos segundos.'
+    : 'The call service is still loading. Please try again in a few seconds.');
+}
 
 (function initLang(){
   var saved = null;
