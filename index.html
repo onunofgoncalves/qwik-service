@@ -777,13 +777,6 @@ function startCall(){
   applyLang(saved || (browser === 'es' ? 'es' : 'en'));
 })();
 
-/* Placeholder only — replaced by the Cognigy Click To Call widget. */
-document.getElementById('ctc').addEventListener('click', function () {
-  var es = document.documentElement.lang === 'es';
-  alert(es
-    ? 'Aqu\u00ed se monta el widget Click To Call.\n\nSustituya el bot\u00f3n del bloque .callpanel por el fragmento de su Voice Gateway Endpoint de Cognigy.'
-    : 'Click To Call widget mounts here.\n\nReplace the .callpanel button with the snippet from your Cognigy Voice Gateway Endpoint configuration.');
-});
 </script>
 
 <!-- ============== Cognigy Click To Call (WebRTC) ==============
@@ -808,5 +801,6 @@ document.getElementById('ctc').addEventListener('click', function () {
     "https://endpoint-trial.cognigy.ai/60728bf34d391e019932b569dd6078a8d0bd1cce100154c801df3e3a98b8e4f0"
   );
 </script>
+-->
 </body>
 </html>
