@@ -37,7 +37,6 @@ body{
   font-family:'Barlow',system-ui,sans-serif;
   font-size:17px;
   line-height:1.6;
-  -webkit-font-smoothing:antialiased;
 }
 
 h1,h2,h3{
@@ -182,50 +181,33 @@ a{color:inherit}
   0%{opacity:.85;transform:scale(1)}
   55%,100%{opacity:0;transform:scale(1.055)}
 }
-.ctc-slot{position:relative;min-height:52px}
-.ctc-slot > [data-qwik-ctc]{
-  position:absolute !important;
-  inset:0 !important;
-  width:100% !important;
-  height:100% !important;
-  margin:0 !important;
-  z-index:2;
+.ctc-slot{
+  display:flex;align-items:center;justify-content:flex-start;
+  min-height:0;
 }
-.ctc-slot > [data-qwik-ctc] button{
-  width:100% !important;
-  height:100% !important;
-  border-radius:3px !important;
+.ctc-slot:empty{display:none}
+/* let the widget keep its own shape — only neutralise any fixed
+   positioning it applies for its default corner placement */
+.ctc-slot > [data-qwik-ctc]{
+  position:static !important;
+  inset:auto !important;
+  margin:0 !important;
 }
 .callcue{
-  display:flex;align-items:center;gap:9px;
-  color:#101A1F;font-size:15px;line-height:1.45;margin:0;
-  padding:12px 0 2px;
-}
-.callcue::before{
-  content:'';width:16px;height:16px;flex:none;background:var(--ink);
-  -webkit-mask:var(--phone) center/contain no-repeat;
-  mask:var(--phone) center/contain no-repeat;
+  color:#000 !important;font-size:17px;font-weight:600;line-height:1.5;
+  margin:0;padding:12px 0 2px;
 }
 .callnote a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
 .callnote{
-  font-size:14.5px;color:#101A1F;margin:14px 0 0;line-height:1.55;
+  font-size:17px;font-weight:600;color:#000 !important;margin:14px 0 0;line-height:1.5;
 }
-.callcue{
-  display:flex;align-items:center;gap:9px;
-  color:#101A1F;font-size:15px;line-height:1.45;margin:0;
-  padding:12px 0 2px;
-}
-.callcue::before{
-  content:'';width:16px;height:16px;flex:none;background:var(--ink);
-  -webkit-mask:var(--phone) center/contain no-repeat;
-  mask:var(--phone) center/contain no-repeat;
-}
-.callnote a{font-weight:600;border-bottom:2px solid var(--signal);text-decoration:none}
+.callcue *,.callnote *,.langline *{color:#000 !important}
+.callnote a{font-weight:700;border-bottom:2px solid var(--signal);text-decoration:none}
 .langline{
   margin-top:16px;padding-top:15px;border-top:1px solid var(--line);
-  font-size:14.5px;color:#101A1F;
+  font-size:17px;font-weight:600;color:#000 !important;
 }
-.langline b{color:var(--ink);font-weight:600}
+.langline b{color:#000;font-weight:600}
 
 @media(max-width:900px){
   .hero{padding:52px 0 60px}
@@ -393,7 +375,8 @@ footer .sp{margin-left:auto}
         <p class="lede" data-i18n="call.lede"></p>
 
 
-        <div id="ctc-slot" class="ctc-slot"><p class="callcue" data-i18n="call.cue"></p></div>
+        <div id="ctc-slot" class="ctc-slot"></div>
+        <p class="callcue" data-i18n="call.cue"></p>
         <p class="callnote" data-i18n="call.note"></p>
         <p class="langline" data-i18n-html="call.switch"></p>
       </div>
@@ -786,7 +769,6 @@ function setLang(lang){
     var root = widgetRoot();
     if (!slot || !root) return false;
     root.setAttribute('data-qwik-ctc', '');
-    slot.innerHTML = '';
     slot.appendChild(root);
     moved = true;
     return true;
