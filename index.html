@@ -193,6 +193,19 @@ a{color:inherit}
   inset:auto !important;
   margin:0 !important;
 }
+/* the widget renders its own label; force it to read black like the rest
+   of the panel rather than the widget's default light text */
+.ctc-slot [data-qwik-ctc] button,
+.ctc-slot [data-qwik-ctc] button *,
+.ctc-slot [data-qwik-ctc] [aria-label="Start a call"],
+.ctc-slot [data-qwik-ctc] [aria-label="Start a call"] *{
+  color:#000 !important;
+  font-weight:600 !important;
+}
+.ctc-slot [data-qwik-ctc] button svg,
+.ctc-slot [data-qwik-ctc] button svg *{
+  stroke:#000 !important;
+}
 .callcue{
   color:#000 !important;font-size:17px;font-weight:600;line-height:1.5;
   margin:0;padding:12px 0 2px;
@@ -290,8 +303,14 @@ section{padding:78px 0}
 /* ---------- booking ---------- */
 .booking{background:var(--steel);color:#fff}
 .booking .wrap{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
-.booking h2{font-size:clamp(30px,3.8vw,44px);text-transform:uppercase;color:#fff}
-.booking p{color:#D2DEE4;max-width:48ch}
+.booking > .wrap > div:not(.callpanel) > h2{
+  font-size:clamp(30px,3.8vw,44px);text-transform:uppercase;color:#fff;
+}
+.booking > .wrap > div:not(.callpanel) > p{color:#D2DEE4;max-width:48ch}
+/* the call panel inside the dark band keeps its own white background,
+   so it must not inherit the band's light text colours */
+.booking .callpanel h2{color:#000 !important;font-size:29px;text-transform:none}
+.booking .callpanel .lede{color:#000 !important;max-width:none}
 .steps{margin:26px 0 0;padding:0;list-style:none;counter-reset:s}
 .steps li{
   counter-increment:s;padding:13px 0 13px 44px;position:relative;
