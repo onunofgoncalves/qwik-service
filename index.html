@@ -346,6 +346,13 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:26px;align-items:baseline}
 footer a{color:#D2DEE4;text-decoration:none}
 footer a:hover{color:#fff}
 footer .sp{margin-left:auto}
+
+/* ---------- xApp confirmation (voice calls) ---------- */
+.xapp-box{margin-top:14px;padding:14px 16px;border:1px solid #d9d6cf;border-radius:10px;background:#fff;color:#000}
+/* .callpanel prefix and !important: the hero section's "p" rule is more specific and would grey this text out */
+.callpanel .xapp-h{margin:0 0 4px !important;font-size:17px !important;font-weight:600;color:#000 !important;max-width:none}
+.callpanel .xapp-p{margin:0 0 10px !important;font-size:15px !important;line-height:1.5;color:#000 !important;max-width:none}
+.xapp-btn{display:inline-block;padding:10px 16px;border-radius:8px;background:#1B2A33;color:#fff !important;text-decoration:none;font-weight:600}
 </style>
 </head>
 <body>
@@ -395,6 +402,14 @@ footer .sp{margin-left:auto}
 
 
         <div id="ctc-slot" class="ctc-slot"></div>
+        <div class="xapp-box">
+          <p class="xapp-h" data-x-en="Cancelling an appointment?" data-x-es="¿Va a cancelar una cita?"></p>
+          <p class="xapp-p"
+             data-x-en="When the agent reads you a code, open the confirmation page and enter it to keep or cancel your appointment."
+             data-x-es="Cuando el agente le lea un código, abra la página de confirmación e introdúzcalo para mantener o cancelar su cita."></p>
+          <a class="xapp-btn" href="https://static-trial.cognigy.ai" target="_blank" rel="noopener"
+             data-x-en="Open confirmation page" data-x-es="Abrir página de confirmación"></a>
+        </div>
         <p class="callcue" data-i18n="call.cue"></p>
         <p class="callnote" data-i18n="call.note"></p>
         <p class="langline" data-i18n-html="call.switch"></p>
@@ -594,7 +609,7 @@ var I18N = {
     "call.lede":"Our appointment line answers straight away. No menus, no queue.",
     "call.cue":"Use the call button at the bottom right of this page",
     "call.note":"You will need to confirm your licence plate and the postal code on your account before we can discuss an existing appointment.",
-    "call.switch":"<b>\u00bfEspa\u00f1ol?</b> Diga \u201cespa\u00f1ol\u201d al principio de la llamada y continuamos en su idioma.",
+    "call.switch":"<b>\u00bfEspa\u00f1ol?</b> Diga \u201cespa\u00f1ol\u201d en cualquier momento de la llamada y continuamos en su idioma.",
 
     "svc.h":"What we do",
     "svc.lede":"Every appointment includes a written check report and a call before any additional work is carried out.",
@@ -671,7 +686,7 @@ var I18N = {
     "call.lede":"Nuestra l\u00ednea de citas responde al instante. Sin men\u00fas ni esperas.",
     "call.cue":"Use el bot\u00f3n de llamada abajo a la derecha de esta p\u00e1gina",
     "call.note":"Necesitar\u00e1 confirmar la matr\u00edcula de su veh\u00edculo y el c\u00f3digo postal de su cuenta antes de poder consultar una cita existente.",
-    "call.switch":"<b>English?</b> Say \u201cEnglish\u201d at the start of the call and we will continue in your language.",
+    "call.switch":"<b>English?</b> Say \u201cEnglish\u201d at any point during the call and we will continue in your language.",
 
     "svc.h":"Qu\u00e9 hacemos",
     "svc.lede":"Toda cita incluye un informe de revisi\u00f3n por escrito y una llamada antes de realizar cualquier trabajo adicional.",
@@ -824,6 +839,24 @@ function setLang(lang){
       window.initWebRTCWidget("https://endpoint-trial.cognigy.ai/27bcbfde7cd10d24028183581b3527adf2e92ff5551787d1ae2264d139bce355");
     }
   });
+</script>
+
+<script>
+/* xApp box: follows the page's EN/ES language */
+(function () {
+  function xappLang(l) {
+    var lang = l === 'es' ? 'es' : 'en';
+    document.querySelectorAll('[data-x-en]').forEach(function (el) {
+      el.textContent = el.getAttribute('data-x-' + lang);
+    });
+  }
+  xappLang(document.documentElement.lang);   // set by initLang above
+  var original = window.setLang;
+  window.setLang = function (l) {
+    if (typeof original === 'function') original(l);
+    xappLang(l);
+  };
+})();
 </script>
 
 </body>
